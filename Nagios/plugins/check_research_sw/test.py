@@ -285,6 +285,7 @@ class TestJSONErrors(unittest.TestCase):
             dict([('json_response', { u'status': u'OK', u'lastUpdate': u'2014-01-13T21:26:04Z', u'meta': {}}), ('exit_code', check_research_sw.codelist['WARNING'])]),                                             # missing PollingInterval
             dict([('json_response', { u'status': u'OK', u'lastUpdate': u'2014-01-13T21:26:04Z'}), ('exit_code', check_research_sw.codelist['WARNING'])]),                                                          # missing meta
             dict([('json_response', { u'status': u'OK', u'lastUpdate': u'2014-01-13T21:26:04Z', u'pollingInterval': u'Every 15 minutes'}), ('exit_code', check_research_sw.codelist['WARNING'])]),                 # pollingInterval not in meta
+            dict([('json_response', { u'status': u'UNKNOWN', u'message': u'There are no polls for this service'}), ('exit_code', check_research_sw.codelist['WARNING'])]),                                         # no polls for service so only message in metadata
         ]
 		   		   
     json_response_index = 0

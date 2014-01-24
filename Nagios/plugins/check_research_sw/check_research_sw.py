@@ -42,7 +42,7 @@ This module is intended to be called from the Nagios nrpe service in response to
 a request from a Nagios head end. Command line arguments provided by the Nagios
 head end are parsed to determine 
 
-a) whether information is being requested fora service (ie. RPI) or platform; 
+a) whether information is being requested for a service (ie. RPI) or platform; 
 b) the science.canarie.ca id for that service or platform.
 
 This information is used to build up an appropriate URL to retrieve information
@@ -82,6 +82,7 @@ expected by Nagios and returned. The rules are as follows:
 
 import requests
 import argparse
+
 
 
 # These are the various exit codes we support, along with human-readable strings.
@@ -140,6 +141,11 @@ def check_response (response, code, msg):
 
     else:
         retcode = 'WARNING'
+
+    # There will be a message in the response if the service has not yet been
+    # polled
+    if ('message' in response):
+        msg = msg + ' - Details: ' + response['message']
 
 		
     # If the exit code has previously been set to something other than OK, don't change it.
