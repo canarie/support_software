@@ -1,0 +1,12 @@
+# Shib authentication required for access (according to Require)
+# the shib session keys will be present in $_SERVER 
+#
+#AuthType shibboleth
+#ShibRequireSession On
+#Require valid-user
+
+AuthType Shibboleth
+ShibRequestSetting requireSession true
+ShibRequireAll On
+Require Shibboleth
+ShibAccessControl /etc/shibboleth/elgg.xml
