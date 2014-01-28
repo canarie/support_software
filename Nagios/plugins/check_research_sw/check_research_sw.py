@@ -82,7 +82,10 @@ expected by Nagios and returned. The rules are as follows:
 
 import requests
 import argparse
+import httplib
 
+# URL of the web service we need to call. Conveniently defined at the top of this file
+urlbase = "https://science.canarie.ca/researchmiddleware/rs/"
 
 
 # These are the various exit codes we support, along with human-readable strings.
@@ -173,7 +176,7 @@ def main():
 
         args = parser.parse_args()
     
-        url = "https://science.canarie.ca/researchmiddleware/rs/" + args.type + "/" + str(args.id) + "/status"
+        url = urlbase + args.type + "/" + str(args.id) + "/status"
 
     
         # If we get this far, we know the component type and id. Add them to the
@@ -185,7 +188,7 @@ def main():
         r = requests.get(url, timeout=timeout_sec)
    
         # If the HTTP transaction was successful ...
-        if r.status_code == 200:
+        if r.status_code == httplib.OK:
             
             # Set exit code based on status field returned in the JSON response.
             # The call to r.json() will raise a ValueError exception if the response

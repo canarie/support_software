@@ -38,6 +38,7 @@ import argparse
 from StringIO import StringIO
 import sys
 import requests
+import httplib
 
 # ------------------------------------------------------------------------------
 class TestCommandLineArguments(unittest.TestCase):
@@ -160,7 +161,7 @@ class TestHTTPErrors(unittest.TestCase):
     def simulate_bad_http_transaction(a,b, timeout):
     	''' Simulate a bad (ie. not 200) HTTP return code '''
     	
-    	r = TestHTTPErrors.TestResponse(401,True)    	    
+    	r = TestHTTPErrors.TestResponse(httplib.UNAUTHORIZED,True)    	    
     	return r
     	    
     	    
@@ -168,7 +169,7 @@ class TestHTTPErrors(unittest.TestCase):
     def simulate_bad_json_transaction(a,b, timeout):
     	'''Simulate the case where we get a valid HTTP response, but it does not include a JSON payload'''
     	
-        r = TestHTTPErrors.TestResponse(200,False)    	    
+        r = TestHTTPErrors.TestResponse(httplib.OK,False)    	    
         return r
     	    
 	
@@ -306,7 +307,7 @@ class TestJSONErrors(unittest.TestCase):
         '''
         def __init__(self,json_to_return):
             self.the_json = json_to_return
-            self.status_code = 200  # We don't want HTTP to fail, so always return 200
+            self.status_code = httplib.OK  # We don't want HTTP to fail, so always return 200
     	    	    
         def json(self):
             return self.the_json
