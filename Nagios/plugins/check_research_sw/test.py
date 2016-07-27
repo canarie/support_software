@@ -1,5 +1,5 @@
 '''
-Copyright 2014 - CANARIE Inc. All rights reserved
+Copyright 2016 - CANARIE Inc. All rights reserved
 
 Synopsis: Unit tests for the check_research_sw module
 
@@ -58,12 +58,9 @@ class TestCommandLineArguments(unittest.TestCase):
         
         # The command lines we're using to test with, along with the values we
         # expect check_research_sw to exit with in each case.
-        command_lines  = [dict([('arg_list',['check_research_sw', 'abc',     '49']), ('exit_code', check_research_sw.codelist['WARNING'])]),  # bad type
-        	              dict([('arg_list',['check_research_sw', 'service', '3a']), ('exit_code', check_research_sw.codelist['WARNING'])]),  # bad id
-        	              dict([('arg_list',['check_research_sw', 'service'      ]), ('exit_code', check_research_sw.codelist['WARNING'])]),  # missing id
-                          dict([('arg_list',['check_research_sw',            '49']), ('exit_code', check_research_sw.codelist['WARNING'])]),  # missing type 
-                          dict([('arg_list',['check_research_sw'                 ]), ('exit_code', check_research_sw.codelist['WARNING'])]),  # missing both
-        	         ]
+        command_lines  = [dict([('arg_list',['check_research_sw', '3a']), ('exit_code', check_research_sw.codelist['WARNING'])]),  # bad id
+                          dict([('arg_list',['check_research_sw',     ]), ('exit_code', check_research_sw.codelist['WARNING'])]),  # missing id
+                          ]
             
         try:
         	for cmd in command_lines:
@@ -193,7 +190,7 @@ class TestHTTPErrors(unittest.TestCase):
             requests.get = self.simulate_http_failure
             
             # A valid command line, so the command line parser doesn't fail
-            sys.argv = ["check_research_sw", "service", "49"]
+            sys.argv = ["check_research_sw", "49"]
             
             # For each of the faults that the original requests.get() can generate 
             for self.fault_index in range (0,len(self.fault_list)):
@@ -228,7 +225,7 @@ class TestHTTPErrors(unittest.TestCase):
         try:
 	        
             # A valid command line, so the command line parser doesn't fail
-            sys.argv = ["check_research_sw", "service", "49"]
+            sys.argv = ["check_research_sw", "49"]
 
             # Test HTTP transaaction where we get a non-200 response code. We do
             # this by replacing requests.get() with our own function.
@@ -333,9 +330,9 @@ class TestJSONErrors(unittest.TestCase):
 
 
         try:
-            # Test command lines that request information for both service and platforms. Alternate
+            # Test command lines that request information for resource. Alternate
             # between these two as we perform the tests below.
-            command_lines = [["check_research_sw", "service", "49"], ["check_research_sw", "platform", "2"]]
+            command_lines = [["check_research_sw", "49"], ["check_research_sw", "2"]]
             command_line_index = 0;
 
             # Replace requests.get() with our own function that returns the JSON

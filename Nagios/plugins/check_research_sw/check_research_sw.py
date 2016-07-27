@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 '''
-Copyright 2014 - CANARIE Inc. All rights reserved
+Copyright 2016 - CANARIE Inc. All rights reserved
 
 Synopsis: simple python script that checks the status of a software service or    
           platform registered on science.canarie.ca and	returns	the result to
@@ -171,17 +171,16 @@ def main():
     try:
         # Build up command line parser
         parser = argparse.ArgumentParser()
-        parser.add_argument("type", type=str, choices=["service", "platform"], help="software component type")
-        parser.add_argument("id", type=int, help="numeric identifier of the software component of interest")
+        parser.add_argument("id", type=int, help="numeric identifier of the resource of interest")
 
         args = parser.parse_args()
     
-        url = urlbase + args.type + "/" + str(args.id) + "/status"
+        url = urlbase + "resource/" + str(args.id) + "/status"
 
     
         # If we get this far, we know the component type and id. Add them to the
         # human readable message we're returning to the Nagios daemon in stdout
-        message = message + ' ' + args.type + ' ' + str(args.id)
+        message = message + ' resource ' + str(args.id)
 
         # Make a request to the web service that tells us about the status of 
         # the specified software component (ie. service or platform).
