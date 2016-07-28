@@ -85,7 +85,7 @@ import argparse
 import httplib
 
 # URL of the web service we need to call. Conveniently defined at the top of this file
-urlbase = "https://science.canarie.ca/researchmiddleware/rs/"
+urlbase = "https://science.canarie.ca/researchsoftware/rs/"
 
 
 # These are the various exit codes we support, along with human-readable strings.
