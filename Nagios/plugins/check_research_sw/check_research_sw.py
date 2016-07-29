@@ -85,7 +85,7 @@ import argparse
 import httplib
 
 # URL of the web service we need to call. Conveniently defined at the top of this file
-urlbase = "https://science.canarie.ca/researchsoftware/rs/"
+urlbase = 'https://science.canarie.ca/researchsoftware/rs'
 
 
 # These are the various exit codes we support, along with human-readable strings.
@@ -102,17 +102,17 @@ def check_status(response):
     '''
     
     code = 'CRITICAL'
-    if ('status' in response):
-        if (response['status'] == 'OK'):
+    if 'status' in response:
+        if response['status'] == 'OK':
             code = 'OK'
 
-        elif (response['status'] == 'UNKNOWN'):
+        elif response['status'] == 'UNKNOWN':
             code = 'WARNING'
 
     # If the status in response was 'ERROR', there is something wrong with the
     # service and we leave the return code at 'CRITICAL'
 
-    return (code)
+    return code
 	
 	
 	
@@ -131,14 +131,14 @@ def check_response (response, code, msg):
 
     retcode = 'OK'
 
-    if ('lastUpdate' in response):
-        msg = msg + ' - Last update: ' + response['lastUpdate']
+    if 'lastUpdate' in response:
+        msg += ' - Last update: {0}'.format(response['lastUpdate'])
     else:
         retcode = 'WARNING';
 			
-    if ('meta' in response):
-        if ('pollingInterval' in response['meta']):
-            msg = msg + ' - Polling: ' + response['meta']['pollingInterval']
+    if 'meta' in response:
+        if 'pollingInterval' in response['meta']:
+            msg += ' - Polling: {0}'.format(response['meta']['pollingInterval'])
         else:
             retcode = 'WARNING';
 
@@ -147,21 +147,19 @@ def check_response (response, code, msg):
 
     # There will be a message in the response if the service has not yet been
     # polled
-    if ('message' in response):
-        msg = msg + ' - Details: ' + response['message']
+    if 'message' in response:
+        msg += ' - Details: {0}'.format(response['message'])
 
 		
     # If the exit code has previously been set to something other than OK, don't change it.
-    if (code == 'CRITICAL'):
-        retcode = 'CRITICAL'
-    elif (code == 'WARNING'):
-        retcode = 'WARNING'
-		
+    if code in ['CRITICAL', 'WARNING']:
+        retcode = code
+
     return (retcode, msg)
 	
 
 
-# Build up the URL used to retrieve status information"
+# Build up the URL used to retrieve status information
 def main():
 
     code = 'CRITICAL'   # assume badness until we learn otherwise
@@ -171,16 +169,16 @@ def main():
     try:
         # Build up command line parser
         parser = argparse.ArgumentParser()
-        parser.add_argument("id", type=int, help="numeric identifier of the resource of interest")
+        parser.add_argument('id', type=int, help='numeric identifier of the resource of interest')
 
         args = parser.parse_args()
     
-        url = urlbase + "resource/" + str(args.id) + "/status"
+        url = '{0}/resource/{1}/status'.format(urlbase, args.id)
 
     
         # If we get this far, we know the component type and id. Add them to the
         # human readable message we're returning to the Nagios daemon in stdout
-        message = message + ' resource ' + str(args.id)
+        message += ' resource {0}'.format(args.id)
 
         # Make a request to the web service that tells us about the status of 
         # the specified software component (ie. service or platform).
@@ -201,32 +199,32 @@ def main():
 
         else:
             # Bad HTTP response code. Update message on stdout appropriately
-            message = message + ' - HTTP response status code {0}'.format(r.status_code) 	  
+            message += ' - HTTP response status code {0}'.format(r.status_code)
 
 
     # Catch any exceptions raised during the above processing and adjust the
     # outgoing human readable message accordingly.
     except SystemExit:
-	    message = message + " - Usage error"      # raised by argparse
+	    message += ' - Usage error'      # raised by argparse
 	    code = 'WARNING'
 
     except ValueError:
-        message = message + ' - Invalid response' # raised by requests.get
+        message += ' - Invalid response' # raised by requests.get
 
     except requests.exceptions.ConnectionError:
-        message = message + ' - Connection error'
+        message += ' - Connection error'
 
     except requests.exceptions.Timeout:
-        message = message + ' - Timeout'
+        message += ' - Timeout'
 
     except requests.exceptions.TooManyRedirects:
-        message = message + ' - Too many redirects'	
+        message += ' - Too many redirects'	
 
     except requests.exceptions.HTTPError:
-        message = message +' - HTTP error'
+        message += ' - HTTP error'
 
     except requests.exceptions.RequestException: 
-        message = message + ' - Unknown communications error'    # catch all
+        message += ' - Unknown communications error'    # catch all
   
   
     print(code + ' - {0} '.format(message))
